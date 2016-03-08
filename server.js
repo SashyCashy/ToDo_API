@@ -28,14 +28,20 @@ app.get('/todos', (request, response) => {
 app.get('/todos/:id', (request, response) => {
 
   var todoid = request.params.id;
-
+  var matchedTodo;
   todos.forEach(function(todo) {
     if(todo.id ==  todoid) {
-      response.json(todo);
-    } else {
-      response.status(404).send();
+      matchedTodo = todo
     }
   });
+
+  if(matchedTodo) {
+    response.json(matchedTodo);
+  } else {
+    response.status(404).send();
+  }
+
+
 });
 
 app.listen(PORT, () => {
