@@ -27,10 +27,10 @@ app.get('/todos', (request, response) => {
 // GET a particular todo/:id
 app.get('/todos/:id', (request, response) => {
 
-  var todoid = request.params.id;
+  var todoid = parseInt(request.params.id, 10);
   var matchedTodo;
   todos.forEach(function(todo) {
-    if(todo.id ==  todoid) {
+    if(todo.id === todoid) {
       matchedTodo = todo
     }
   });
