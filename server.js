@@ -38,11 +38,6 @@ app.get('/todos/:id', (request, response) => {
 
   var todoid = parseInt(request.params.id, 10);
   var matchedTodo = _.findWhere(todos, {id: todoid});
-  // todos.forEach(function(todo) {
-  //   if(todo.id === todoid) {
-  //     matchedTodo = todo
-  //   }
-  // });
 
   if(matchedTodo) {
     response.json(matchedTodo);
@@ -53,11 +48,15 @@ app.get('/todos/:id', (request, response) => {
 
 // POST / todos
 app.post('/todos', (request, response) => { // Install body parser
-  var body = request.body;
+  var body = _.pick(request.body, 'description', 'completed')//request.body;
+  if(!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
+    return response.status(404).send();
+  }
+
   console.log("Description: " + body.description);
   var newTodo = {
     id: todoNextId,
-    description: body.description,
+    description: body.description.trim(),
     completed: body.completed
   };
   todoNextId++;
