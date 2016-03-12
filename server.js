@@ -66,6 +66,23 @@ app.post('/todos', (request, response) => { // Install body parser
 })
 
 
+// DELETE/todo:id
+app.delete('/todos/:id', (request, response) => {
+  var todoid = parseInt(request.params.id, 10);
+  var matchedTodo = _.findWhere(todos, {id: todoid});
+  if(matchedTodo) {
+    var newTodos = _.without(todos, matchedTodo);
+    todos = newTodos;
+
+    response.json(todos);
+  } else {
+    return response.status(404).json({"error": "Todo not found for the provided id."});
+  }
+
+
+});
+
+
 
 app.listen(PORT, () => {
   console.log("Express listening on port " + PORT + " !");
