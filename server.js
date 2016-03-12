@@ -73,13 +73,38 @@ app.delete('/todos/:id', (request, response) => {
   if(matchedTodo) {
     var newTodos = _.without(todos, matchedTodo);
     todos = newTodos;
-
     response.json(todos);
   } else {
     return response.status(404).json({"error": "Todo not found for the provided id."});
   }
+});
 
 
+// update
+app.put('/todos/:id', (request, response) => {
+  var todoid = parseInt(request.params.id, 10);
+  var matchedTodo = _.findWhere(todos, {id: todoid});
+  var body = _.pick(request.body, "description", "body");
+  var validAttributes = {};
+
+  if(!matchedTodo) {
+    return response.status(404).json({"error": "Todo not found for the provided id."});
+  }
+
+  if(body.hasOwnProperty('completed') && _.isBoolean(body.completed)) {
+    validAttributes.completed = body.completed;
+  } else if(body.hasOwnProperty('completed')) {
+    return response.status(404).send();
+  }
+
+  if(body.hasOwnProperty('description') && _.isString(body.description) && body.description.length > 0) {
+    validAttributes.description = body.description;
+  } else if(body.hasOwnProperty('description')) {
+    return response.status(404).send();
+  }
+
+  matchedTodo = _.extend(matchedTodo, validAttributes);
+  response.json(matchedTodo);
 });
 
 
