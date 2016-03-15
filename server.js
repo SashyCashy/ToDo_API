@@ -28,7 +28,7 @@ app.get('/', (request, response) => {
   response.send('Todo API Route');
 });
 
-//GET all todos
+//GET all todos?completed=false&q=work
 app.get('/todos', (request, response) => {
   var queryParam = request.query;
   var filteredTodos = todos;
@@ -38,6 +38,12 @@ app.get('/todos', (request, response) => {
     filteredTodos = _.where(filteredTodos, {completed: true});
   } else if(_.has(queryParam, "completed") && queryParam.completed === 'false') {
     filteredTodos = _.where(filteredTodos, {completed: false});
+  }
+
+  if(_.has(queryParam, "q") && queryParam.q.length > 0) {
+    filteredTodos = _.filter(filteredTodos, function(todo) {
+      return todo.description.indexOf(queryParam.q) > -1;
+    });
   }
 
   response.json(filteredTodos);
