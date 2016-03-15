@@ -30,7 +30,17 @@ app.get('/', (request, response) => {
 
 //GET all todos
 app.get('/todos', (request, response) => {
-  response.json(todos);
+  var queryParam = request.query;
+  var filteredTodos = todos;
+
+  // if has property && completed === 'true'
+  if(_.has(queryParam, "completed") && queryParam.completed === 'true') {
+    filteredTodos = _.where(filteredTodos, {completed: true});
+  } else if(_.has(queryParam, "completed") && queryParam.completed === 'false') {
+    filteredTodos = _.where(filteredTodos, {completed: false});
+  }
+
+  response.json(filteredTodos);
 });
 
 // GET a particular todo/:id
@@ -106,6 +116,8 @@ app.put('/todos/:id', (request, response) => {
   matchedTodo = _.extend(matchedTodo, validAttributes);
   response.json(matchedTodo);
 });
+
+
 
 
 
