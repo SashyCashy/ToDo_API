@@ -1,7 +1,16 @@
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(undefined, undefined, undefined, {
   'dialect': 'sqlite',
-  'storage': 'basic-sqlitedb.sqlite'
+  'storage': __dirname + '/basic-sqlitedb.sqlite'
+});
+
+var Todo = sequelize.define('todo', {
+  description: {
+    type: Sequelize.STRING
+  },
+  completed: {
+    type: Sequelize.BOOLEAN
+  }
 });
 
 sequelize.sync().then(function() {
